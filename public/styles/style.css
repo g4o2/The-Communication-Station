@@ -48,17 +48,17 @@ body {
     text-orientation: mixed;
 }
 
-#users ul {
+#users {
     list-style-type: none;
 }
 
-#users ul li {
+#users li {
     font-size: 20px;
     display: flex;
     align-items: center;
 }
 
-#users ul li img {
+#users li img {
     height: 40px;
     width: 40px;
     border-radius: 100px;

@@ -11,8 +11,8 @@
 
 <body>
     <div class="container">
-        <div id="users" class="box box-1">
-            <ul>
+        <div class="box box-1">
+            <ul id="users">
                 <li>
                     <img src="./assets/images/default-user.png" alt="Profile picture for username">
                     <span>username</span>
@@ -24,6 +24,19 @@
                 <div class="message-container">
                     <img class="message-sender-pfp" src="./assets/images/default-user.png"
                         alt="Profile picture for g4o2">
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">g4o2</span>
+                            (<time class="message-datetime" datetime="2022-11-04T16:33:55Z">Fri, 04 Nov 2022 16:33:55
+                                +0000</time>)
+                        </div>
+                        <div class="message-body">
+                            <span class="message">a random message</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="message-container">
+                    <img class="message-sender-pfp" src="./assets/images/default-user.png" alt="Profile picture for g4o2">
                     <div class="message-content">
                         <div class="message-header">
                             <span class="message-sender">g4o2</span>
@@ -53,7 +66,16 @@
         const form = document.getElementById('message-form');
         const input = document.getElementById('message-input');
         const submitBtn = document.getElementById('submit');
-        const username = "test";
+        let usernametemp = "";
+
+        do {
+            usernametemp = prompt('Username');
+        } while (usernametemp.match(/[^a-zA-Z0-9_]+/g) || usernametemp == "")
+        if (usernametemp) {
+            socket.emit('user-connect', usernametemp);
+        }
+
+        const username = usernametemp;
 
         function chatScroll() {
             messages.scrollTop = messages.scrollHeight;
@@ -68,16 +90,20 @@
                 .replace(/"/g, "&quot;");
         }
 
-        socket.emit('user-connect', username);
         socket.on('user-connect', function (username) {
-            alert(username)
+            let user = new User(username);
+            user.setup();
         })
 
         socket.on('message-submit', function (messageDetails) {
-            let date = messageDetails.date;
-            let localDate = new Date(date.toLocaleString());
-            messageDetails.date = localDate;
-            console.log(messageDetails);
+            if(Math.abs(messages.scrollHeight - messages.scrollTop - messages.clientHeight) < 1) {
+                const test = new Message(messageDetails.username, messageDetails.date, messageDetails.message);
+                test.appendMessage();
+                chatScroll()
+            } else {
+                const test = new Message(messageDetails.username, messageDetails.date, messageDetails.message);
+                test.appendMessage();
+            }
         });
 
         form.addEventListener('submit', function (e) {
@@ -86,9 +112,9 @@
                 let date = new Date().toUTCString();
                 let message = input.value;
                 messageDetails = {
-                    message: input.value,
+                    username: username,
                     date: date,
-                    username: username
+                    message: input.value
                 }
                 socket.emit('message-submit', messageDetails);
                 input.value = '';
