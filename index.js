@@ -27,6 +27,21 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
 });
 
+io.on('connection', (socket) => {
+    socket.on('user-connect', (user_id) => {
+        console.log(`User id ${user_id} connected`);
+        io.emit('user-connect', user_id);
+    })
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+    socket.on('test', (data) => {
+        io.emit('test', data);
+        console.log(data);
+    });
+})
+
+/*
 app.get('/db/test/:id', (req, res) => {
     let id = req.params.id;
     data = {
@@ -44,21 +59,7 @@ app.get('/db/test2', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(data, null, 3));
 });
-
-
-io.on('connection', (socket) => {
-    socket.on('user-connect', (user_id) => {
-        console.log(`User id ${user_id} connected`);
-        io.emit('user-connect', user_id);
-    })
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-    socket.on('test', (data) => {
-        io.emit('test', data);
-        console.log(data);
-    });
-})
+*/
 
 server.listen(3000, () => {
     console.log('listening on *:3000');
