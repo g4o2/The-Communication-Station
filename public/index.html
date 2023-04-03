@@ -52,7 +52,8 @@
         const form = document.getElementById('message-form');
         const input = document.getElementById('message-input');
         const submitBtn = document.getElementById('submit');
-        let usernametemp = "";
+        let usernametemp = "username";
+        let pfp = "./assets/images/default-user.png";
         do {
             usernametemp = prompt('Username');
         } while (usernametemp.match(/[^a-zA-Z0-9_]+/g) || usernametemp == "")
@@ -109,6 +110,13 @@
                 const test = new Message(messageDetails.username, messageDetails.date, messageDetails.message);
                 test.appendMessage();
             }
+
+            const images = document.querySelectorAll('img');
+
+            images.forEach(image => {
+                image.setAttribute('src', pfp);
+            });
+
         });
 
         form.addEventListener('submit', function (e) {
