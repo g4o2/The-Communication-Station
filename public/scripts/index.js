@@ -53,12 +53,11 @@ class Message {
         document.getElementById('messages').appendChild(div);
     }
 }
-
 class User {
     constructor(username) {
         this.username = username
     }
-    setup() {
+    addUserToUsers() {
         const liElement = document.createElement("li");
 
         const imgElement = document.createElement("img");
@@ -72,15 +71,10 @@ class User {
         liElement.appendChild(spanElement);
 
         document.getElementById("users").appendChild(liElement);
-
+    }
+    addUserToMessages() {
         const pElement = document.createElement("p");
         pElement.textContent = `User ${this.username} connected`;
         document.getElementById("messages").appendChild(pElement);
     }
 }
-
-const test = new Message("g4o2", "Fri, 04 Nov 2022 16:33:55 +0000", "a random message");
-test.appendMessage();
-
-const testuser = new User("testuser");
-testuser.setup();

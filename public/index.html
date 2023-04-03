@@ -77,6 +77,16 @@
 
         const username = usernametemp;
 
+        socket.emit("get-users", username);
+
+        socket.on("get-users", function(users) {
+            for(let i = 0; i < users.length; i++) {
+                if(users[i] !== username) {
+                    let user = new User(users[i]);
+                    user.addUserToUsers();
+                }
+            }
+        })
         function chatScroll() {
             messages.scrollTop = messages.scrollHeight;
         }
@@ -92,7 +102,8 @@
 
         socket.on('user-connect', function (username) {
             let user = new User(username);
-            user.setup();
+            user.addUserToUsers();
+            user.addUserToMessages();
         })
 
         socket.on('message-submit', function (messageDetails) {

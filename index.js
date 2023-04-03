@@ -11,6 +11,8 @@ const io = new Server(server, {
     }
 });
 
+let users = []
+
 app.use('/\*', function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "Content-Type")
@@ -31,6 +33,10 @@ io.on('connection', (socket) => {
     socket.on('user-connect', (username) => {
         console.log(`User ${username} connected`);
         io.emit('user-connect', username);
+        users.push(username);
+    })
+    socket.on('get-users', (username) => {
+        socket.emit('get-users', users);
     })
     socket.on('disconnect', () => {
         console.log('user disconnected');
