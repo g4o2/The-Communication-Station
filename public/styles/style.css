@@ -24,7 +24,7 @@ body {
     display: flex;
     flex-direction: column;
     /* justify-content: center; */
-    border: solid 1px red;
+    border: solid 1px orange;
 }
 
 .box-1 {
@@ -46,7 +46,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border: solid 1px red;
+    border: solid 1px orange;
 }
 
 .box-3 {
@@ -71,7 +71,7 @@ body {
 
 #messages {
     padding: 20px;
-    border: solid 1px red;
+    border: solid 1px orange;
     flex: 7;
     min-height: 0;
     overflow-y: auto;
@@ -90,7 +90,7 @@ body {
 }
 
 #message-form {
-    border: solid 1px red;
+    border: solid 1px orange;
     flex: 1;
 }
 
