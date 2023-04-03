@@ -1,6 +1,16 @@
 const year = new Date().getFullYear();
 document.getElementById("footer-year").innerHTML = year;
 
+
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/'/g, "&#x27;")
+        .replace(/"/g, "&quot;");
+}
+
 class Message {
     constructor(username, date, message) {
         this.username = username;
@@ -40,7 +50,7 @@ class Message {
 
         const messageSpan = document.createElement("span");
         messageSpan.classList.add("message");
-        messageSpan.innerText = this.message;
+        messageSpan.innerText = escapeHtml(this.message);
 
         messageBodyDiv.appendChild(messageSpan);
 

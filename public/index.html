@@ -13,29 +13,15 @@
     <div class="container">
         <div class="box box-1">
             <ul id="users">
-                <li>
+                <!-- <li>
                     <img src="./assets/images/default-user.png" alt="Profile picture for username">
                     <span>username</span>
-                </li>
+                </li> -->
             </ul>
         </div>
         <div class="box box-2">
             <div id="messages">
-                <div class="message-container">
-                    <img class="message-sender-pfp" src="./assets/images/default-user.png"
-                        alt="Profile picture for g4o2">
-                    <div class="message-content">
-                        <div class="message-header">
-                            <span class="message-sender">g4o2</span>
-                            (<time class="message-datetime" datetime="2022-11-04T16:33:55Z">Fri, 04 Nov 2022 16:33:55
-                                +0000</time>)
-                        </div>
-                        <div class="message-body">
-                            <span class="message">a random message</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="message-container">
+                <!-- <div class="message-container">
                     <img class="message-sender-pfp" src="./assets/images/default-user.png" alt="Profile picture for g4o2">
                     <div class="message-content">
                         <div class="message-header">
@@ -47,7 +33,7 @@
                             <span class="message">a random message</span>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <form id="message-form">
                 <input type="text" id="message-input" placeholder="Type your message...">
@@ -74,10 +60,22 @@
         if (usernametemp) {
             socket.emit('user-connect', usernametemp);
         }
-
+        
         const username = usernametemp;
-
+        
         socket.emit("get-users", username);
+        socket.emit("get-chatlog", username);
+        function chatScroll() {
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        socket.on('get-chatlog', function(chatlog) {
+            for(let i = 0; i < chatlog.length; i++) {
+                const message = new Message(chatlog[i].username, chatlog[i].date, chatlog[i].message);
+                message.appendMessage();
+                chatScroll()
+            }
+        })
 
         socket.on("get-users", function(users) {
             for(let i = 0; i < users.length; i++) {
@@ -87,23 +85,14 @@
                 }
             }
         })
-        function chatScroll() {
-            messages.scrollTop = messages.scrollHeight;
-        }
 
-        function escapeHtml(text) {
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/'/g, "&#x27;")
-                .replace(/"/g, "&quot;");
-        }
-
-        socket.on('user-connect', function (username) {
-            let user = new User(username);
-            user.addUserToUsers();
-            user.addUserToMessages();
+        socket.on('user-connect', function (username) {  
+            setTimeout(function () {
+                let user = new User(username);
+                user.addUserToUsers();
+                user.addUserToMessages();
+                chatScroll()
+            }, 1000);
         })
 
         socket.on('message-submit', function (messageDetails) {

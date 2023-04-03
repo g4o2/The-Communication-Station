@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const helmet = require("helmet");
 const app = express();
 const http = require('http');
@@ -38,11 +39,23 @@ io.on('connection', (socket) => {
     socket.on('get-users', (username) => {
         socket.emit('get-users', users);
     })
+    socket.on('get-chatlog', (username) => {
+        const chatlog = JSON.parse(fs.readFileSync('chatlog.json'));
+        // const updatedChatLog = JSON.stringify(chatlog, null, 4);
+
+        socket.emit('get-chatlog', chatlog)
+    })
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
     socket.on('message-submit', (data) => {
         io.emit('message-submit', data);
+
+        const chatlog = JSON.parse(fs.readFileSync('chatlog.json'));
+        chatlog.push(data);
+        const updatedChatLog = JSON.stringify(chatlog, null, 4);
+        fs.writeFileSync('chatlog.json', updatedChatLog);
+
         console.log(data);
     });
 })
@@ -69,4 +82,4 @@ app.get('/db/test2', (req, res) => {
 
 server.listen(3000, () => {
     console.log('listening on *:3000');
-}); 
+});
