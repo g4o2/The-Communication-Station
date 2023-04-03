@@ -18,18 +18,22 @@ body {
     text-align: center;
     color: white;
     font-family: sans-serif;
-    font-size: 36px;
+    font-size: 20px;
     padding: 20px;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     border: solid 1px red;
 }
 
 .box-1 {
     background-color: rgba(41, 41, 41);
     flex: .3;
+
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .box-2 {
@@ -59,30 +63,37 @@ body {
     align-items: center;
 }
 
+#users ul li img {
+    height: 40px;
+    width: 40px;
+    border-radius: 100px;
+}
+
 #messages {
+    padding: 20px;
     border: solid 1px red;
     flex: 7;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.message-container {
+    font-size: 18px;
+}
+
+.message-container img {
+    height: 40px;
+    width: 40px;
+    border-radius: 100px;
+    float: left;
 }
 
 #message-form {
     border: solid 1px red;
     flex: 1;
 }
-/* 
 
-#users {
-    border: solid 1px red;
-} */
-/* 
-#messages {
-    width: 100%;
-    border: solid 1px red;
-} */
-
-img {
-    height: 40px;
-}
-/*
 #message-form input {
     height: 36px;
     width: 70%;
@@ -97,4 +108,4 @@ img {
 
 #message-form button {
     padding: 8px;
-} */
+}
