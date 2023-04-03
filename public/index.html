@@ -10,38 +10,110 @@
 </head>
 
 <body>
-<div class="container">
-    <div id="users" class="box box-1">
-        <ul>
-            <li>
-                <img src="./assets/images/default-user.png" alt="Profile picture for username">
-                <span>username</span>
-            </li>
-        </ul>
-    </div>
-    <div class="box box-2">
-        <div id="messages">
-            <div class="message-container">
-                <img class="message-sender-pfp" src="./assets/images/default-user.png" alt="Profile picture for g4o2">
-                <div class="message-content">
-                    <div class="message-header">
-                        <span class="message-sender">g4o2</span>
-                        (<time class="message-datetime" datetime="2022-11-04T16:33:55Z">Fri, 04 Nov 2022 16:33:55 +0000</time>)
-                    </div>
-                    <div class="message-body">
-                        <span class="message">a random message</span>
+    <div class="container">
+        <div id="users" class="box box-1">
+            <ul>
+                <li>
+                    <img src="./assets/images/default-user.png" alt="Profile picture for username">
+                    <span>username</span>
+                </li>
+            </ul>
+        </div>
+        <div class="box box-2">
+            <div id="messages">
+                <div class="message-container">
+                    <img class="message-sender-pfp" src="./assets/images/default-user.png"
+                        alt="Profile picture for g4o2">
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">g4o2</span>
+                            (<time class="message-datetime" datetime="2022-11-04T16:33:55Z">Fri, 04 Nov 2022 16:33:55
+                                +0000</time>)
+                        </div>
+                        <div class="message-body">
+                            <span class="message">a random message</span>
+                        </div>
                     </div>
                 </div>
             </div>
+            <form id="message-form">
+                <input type="text" id="message-input" placeholder="Type your message...">
+                <button type="submit" id="submit">Send</button>
+            </form>
         </div>
-        <div id="message-form">
-            <input type="text" id="message-input" placeholder="Type your message...">
-            <button type="submit">Send</button>
+        <div class="box box-3">
+            <p>&copy; <span id="footer-year">2023</span> The Communication Station. All rights reserved.</p>
         </div>
     </div>
-    <div class="box box-3"><p>&copy; <span id="footer-year">2023</span> The Communication Station. All rights reserved.</p></div>
-</div>
     <script src="./scripts/index.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const messages = document.getElementById('messages');
+        const form = document.getElementById('message-form');
+        const input = document.getElementById('message-input');
+        const submitBtn = document.getElementById('submit');
+        const username = "test";
+
+        function chatScroll() {
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/'/g, "&#x27;")
+                .replace(/"/g, "&quot;");
+        }
+
+        socket.emit('user-connect', username);
+        socket.on('user-connect', function (username) {
+            alert(username)
+        })
+
+        socket.on('message-submit', function (messageDetails) {
+            let date = messageDetails.date;
+            let localDate = new Date(date.toLocaleString());
+            messageDetails.date = localDate;
+            console.log(messageDetails);
+        });
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (input.value) {
+                let date = new Date().toUTCString();
+                let message = input.value;
+                messageDetails = {
+                    message: input.value,
+                    date: date,
+                    username: username
+                }
+                socket.emit('message-submit', messageDetails);
+                input.value = '';
+            }
+        });
+
+        window.addEventListener("keydown", event => {
+            if ((event.keyCode == 191)) {
+                if (input === document.activeElement) {
+                    return;
+                } else {
+                    input.focus();
+                    input.select();
+                    event.preventDefault();
+                }
+            }
+            if ((event.keyCode == 27)) {
+                if (input === document.activeElement) {
+                    document.activeElement.blur();
+                    window.focus();
+                    event.preventDefault();
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
