@@ -53,7 +53,6 @@
         const input = document.getElementById('message-input');
         const submitBtn = document.getElementById('submit');
         let usernametemp = "";
-
         do {
             usernametemp = prompt('Username');
         } while (usernametemp.match(/[^a-zA-Z0-9_]+/g) || usernametemp == "")
@@ -65,6 +64,7 @@
         
         socket.emit("get-users", username);
         socket.emit("get-chatlog", username);
+        socket.emit("get-pfp", username);
         function chatScroll() {
             messages.scrollTop = messages.scrollHeight;
         }
@@ -84,6 +84,11 @@
                     user.addUserToUsers();
                 }
             }
+        })
+
+        socket.on('get-pfp', function (src) {
+            console.log(src)
+            pfp = src;
         })
 
         socket.on('user-connect', function (username) {  
@@ -114,7 +119,7 @@
                 messageDetails = {
                     username: username,
                     date: date,
-                    message: input.value
+                    message: input.value,
                 }
                 socket.emit('message-submit', messageDetails);
                 input.value = '';

@@ -65,7 +65,7 @@ class Message {
 }
 class User {
     constructor(username) {
-        this.username = username
+        this.username = username;
     }
     addUserToUsers() {
         const liElement = document.createElement("li");

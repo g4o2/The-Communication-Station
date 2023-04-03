@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const Identicon = require('identicon.js');
 const helmet = require("helmet");
 const app = express();
 const http = require('http');
@@ -44,6 +45,13 @@ io.on('connection', (socket) => {
         // const updatedChatLog = JSON.stringify(chatlog, null, 4);
 
         socket.emit('get-chatlog', chatlog)
+    })
+    socket.on('get-pfp', (username) => {
+        let temp = "d6fe8c82fb0aba";
+        let hash = username.concat(temp);
+        var data = new Identicon(hash).toString();
+        let src = 'data:image/png;base64,' + data;
+        socket.emit("get-pfp", src)
     })
     socket.on('disconnect', () => {
         console.log('user disconnected');
